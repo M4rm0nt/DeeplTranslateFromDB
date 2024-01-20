@@ -41,4 +41,41 @@ public class ArtikelRepository {
         }
         return artikelList;
     }
+
+    public void saveTranslatedArtikel(Artikel artikel) {
+        String query = "INSERT INTO translated_artikel (original_artikel_id, name, beschreibung, zielsprache) VALUES (?, ?, ?, ?)";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, artikel.getId());
+            statement.setString(2, artikel.getName());
+            statement.setString(3, artikel.getBeschreibung());
+            statement.setString(4, artikel.getZielsprache());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            LOGGER.error("Fehler beim Speichern des übersetzten Artikels: {}", e.getMessage(), e);
+        }
+    }
+
+    public List<Artikel> getAllTranslatedArtikel() {
+        List<Artikel> artikelList = new ArrayList<>();
+        String query = "SELECT * FROM translated_artikel";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Artikel artikel = new Artikel(
+                        resultSet.getInt("original_artikel_id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("beschreibung")
+                );
+                artikel.setZielsprache(resultSet.getString("zielsprache"));
+                artikelList.add(artikel);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Fehler beim Abrufen der übersetzten Artikel: {}", e.getMessage(), e);
+        }
+        return artikelList;
+    }
 }

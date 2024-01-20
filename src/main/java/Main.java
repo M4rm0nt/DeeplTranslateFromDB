@@ -11,11 +11,21 @@ public class Main {
 
         List<Artikel> artikelList = artikelRepository.getAllArtikel();
         for (Artikel artikel : artikelList) {
-            String artikelName = apiClient.translateText(artikel.getName(), "EN");
-            String translatedBeschreibung = apiClient.translateText(artikel.getBeschreibung(), "EN");
-            System.out.println("Artikel ID: " + artikel.getId());
-            System.out.println("Name: " + artikelName);
-            System.out.println("Beschreibung: " + translatedBeschreibung);
+            String translatedName = apiClient.translateText(artikel.getName(), "IT");
+            String translatedBeschreibung = apiClient.translateText(artikel.getBeschreibung(), "IT");
+
+            Artikel translatedArtikel = new Artikel(artikel.getId(), translatedName, translatedBeschreibung);
+            translatedArtikel.setZielsprache("IT");
+            artikelRepository.saveTranslatedArtikel(translatedArtikel);
+        }
+
+
+        List<Artikel> translatedArtikelList = artikelRepository.getAllTranslatedArtikel();
+        for (Artikel ta : translatedArtikelList) {
+            System.out.println("Übersetzter Artikel ID: " + ta.getId());
+            System.out.println("Name: " + ta.getName());
+            System.out.println("Beschreibung: " + ta.getBeschreibung());
+            System.out.println("Zielsprache: " + ta.getZielsprache());
             System.out.println("---------------------------------------------------");
         }
     }
