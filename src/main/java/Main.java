@@ -1,5 +1,5 @@
 import controller.DeepLApiClient;
-import dao.ArtikelDAO;
+import repositorys.ArtikelRepository;
 import models.Artikel;
 
 import java.util.List;
@@ -7,9 +7,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         DeepLApiClient apiClient = new DeepLApiClient();
-        ArtikelDAO artikelDAO = new ArtikelDAO();
+        ArtikelRepository artikelRepository = new ArtikelRepository();
 
-        List<Artikel> artikelList = artikelDAO.getAllArtikel();
+        List<Artikel> artikelList = artikelRepository.getAllArtikel();
         for (Artikel artikel : artikelList) {
             String artikelName = apiClient.translateText(artikel.getName(), "EN");
             String translatedBeschreibung = apiClient.translateText(artikel.getBeschreibung(), "EN");
